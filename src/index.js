@@ -1,2 +1,2 @@
-var a = 12;
-console.log(1);
+const a = 12;
+console.log(a);
