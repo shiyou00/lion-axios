@@ -32,3 +32,10 @@ axios({
 }).then((res) => {
   console.log(res);
 });
+
+// axios({
+//   method: "get",
+//   url:"/error/page"
+// }).catch((err)=>{
+//   console.log(err);
+// })
