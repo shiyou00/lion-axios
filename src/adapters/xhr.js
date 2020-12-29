@@ -1,6 +1,6 @@
 import { parseHeaders } from "../helpers/headers";
 
-const xhr = (config) => {
+module.exports = function xhrAdapter(config) {
   return new Promise((resolve) => {
     let {
       data = null,
@@ -9,6 +9,7 @@ const xhr = (config) => {
       headers = {},
       responseType,
     } = config;
+
     const request = new XMLHttpRequest();
     request.open(method.toUpperCase(), url, true);
 
@@ -54,5 +55,3 @@ const xhr = (config) => {
     request.send(data);
   });
 };
-
-export default xhr;

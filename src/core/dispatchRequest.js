@@ -1,4 +1,3 @@
-import xhr from "../adapters/xhr";
 import { transformRequest, transformResponse } from "../helpers/data";
 import { processHeaders } from "../helpers/headers";
 import { buildURL } from "../helpers/url";
@@ -29,11 +28,28 @@ const transformResponseData = (res) => {
   return res;
 };
 
+const getDefaultAdapter = () => {
+  let adapter;
+  if (typeof XMLHttpRequest !== "undefined") {
+    // 浏览器
+    adapter = require("../adapters/xhr");
+  } else if (
+    typeof process !== "undefined" &&
+    Object.prototype.toString.call(process) === "[object process]"
+  ) {
+    // node.js
+    adapter = require("../adapters/http");
+  }
+  return adapter;
+};
+
 const dispatchRequest = (config) => {
+  const adapter = config.adapter || getDefaultAdapter();
+
   // 处理传入的配置
   processConfig(config);
   // 发送请求
-  return xhr(config).then((res) => transformResponseData(res));
+  return adapter(config).then((res) => transformResponseData(res));
 };
 
 export default dispatchRequest;
