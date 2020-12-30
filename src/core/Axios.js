@@ -11,19 +11,52 @@ class Axios {
     return dispatchRequest(config);
   }
 
-  get() {}
+  get(url, config) {
+    return this._requestMethodWithoutData("get", url, config);
+  }
 
-  delete() {}
+  delete(url, config) {
+    return this._requestMethodWithoutData("delete", url, config);
+  }
 
-  head() {}
+  head(url, config) {
+    return this._requestMethodWithoutData("head", url, config);
+  }
 
-  options() {}
+  options(url, config) {
+    return this._requestMethodWithoutData("head", url, config);
+  }
 
-  post() {}
+  post(url, data, config) {
+    return this._requestMethodWithData("post", url, data, config);
+  }
 
-  put() {}
+  put(url, data, config) {
+    return this._requestMethodWithData("put", url, data, config);
+  }
 
-  patch() {}
+  patch(url, data, config) {
+    return this._requestMethodWithData("patch", url, data, config);
+  }
+
+  _requestMethodWithoutData(method, url, config) {
+    return this.request(
+      Object.assign(config || {}, {
+        method,
+        url,
+      })
+    );
+  }
+
+  _requestMethodWithData(method, url, data, config) {
+    return this.request(
+      Object.assign(config || {}, {
+        method,
+        url,
+        data,
+      })
+    );
+  }
 }
 
 export default Axios;
