@@ -1,14 +1,51 @@
 import dispatchRequest from "./dispatchRequest";
+import InterceptorManager from "./InterceptorManager";
 
 class Axios {
   config = {};
+  interceptors = {};
 
   constructor(initConfig) {
     this.config = initConfig;
+    this.interceptors = {
+      request: new InterceptorManager(),
+      response: new InterceptorManager(),
+    };
   }
 
-  request(config) {
-    return dispatchRequest(config);
+  request(url, config) {
+    if (typeof url === "string") {
+      if (!config) {
+        config = {};
+      }
+      config.url = url;
+    } else {
+      config = url;
+    }
+
+    const chain = [
+      {
+        resolved: dispatchRequest,
+        rejected: undefined,
+      },
+    ];
+
+    this.interceptors.request.forEach((interceptor) => {
+      chain.unshift(interceptor);
+    });
+
+    this.interceptors.response.forEach((interceptor) => {
+      chain.push(interceptor);
+    });
+
+    let promise = Promise.resolve(config);
+
+    while (chain.length) {
+      const { resolved, rejected } = chain.shift();
+      promise = promise.then(resolved, rejected);
+    }
+
+    return promise;
   }
 
   get(url, config) {

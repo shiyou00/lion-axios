@@ -16,5 +16,6 @@ module.exports = {
     "import/no-dynamic-require": "off",
     "global-require": "off",
     "require-yield": "off",
+    "no-prototype-builtins": "off",
   },
 };
