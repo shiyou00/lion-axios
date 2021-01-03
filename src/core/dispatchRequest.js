@@ -1,5 +1,5 @@
 import { transformRequest, transformResponse } from "../helpers/data";
-import { processHeaders } from "../helpers/headers";
+import { processHeaders, flattenHeaders } from "../helpers/headers";
 import { buildURL } from "../helpers/url";
 
 const transformURL = (config) => {
@@ -20,6 +20,7 @@ const processConfig = (config) => {
   config.url = transformURL(config);
   config.headers = transformHeaders(config);
   config.data = transformRequestData(config);
+  config.headers = flattenHeaders(config.headers, config.method);
 };
 
 // 转换输出数据函数

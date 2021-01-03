@@ -1,12 +1,13 @@
 import dispatchRequest from "./dispatchRequest";
 import InterceptorManager from "./InterceptorManager";
+import mergeConfig from "./mergeConfig";
 
 class Axios {
-  config = {};
+  defaults = {};
   interceptors = {};
 
   constructor(initConfig) {
-    this.config = initConfig;
+    this.defaults = initConfig;
     this.interceptors = {
       request: new InterceptorManager(),
       response: new InterceptorManager(),
@@ -22,6 +23,8 @@ class Axios {
     } else {
       config = url;
     }
+
+    config = mergeConfig(this.defaults, config);
 
     const chain = [
       {
