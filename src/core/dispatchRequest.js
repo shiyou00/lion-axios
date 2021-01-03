@@ -1,52 +1,27 @@
-import { transformRequest, transformResponse } from "../helpers/data";
-import { processHeaders, flattenHeaders } from "../helpers/headers";
+import { flattenHeaders } from "../helpers/headers";
 import { buildURL } from "../helpers/url";
+import transform from "./transform";
+import defaults from "../defaults";
 
 const transformURL = (config) => {
   const { url, params } = config;
   return buildURL(url, params);
 };
 
-const transformHeaders = (config) => {
-  const { headers = {}, data } = config;
-  return processHeaders(headers, data);
-};
-
-const transformRequestData = (config) => {
-  return transformRequest(config.data);
-};
-
 const processConfig = (config) => {
   config.url = transformURL(config);
-  config.headers = transformHeaders(config);
-  config.data = transformRequestData(config);
+  config.data = transform(config.data, config.headers, config.transformRequest);
   config.headers = flattenHeaders(config.headers, config.method);
 };
 
 // 转换输出数据函数
 const transformResponseData = (res) => {
-  res.data = transformResponse(res.data);
+  res.data = transform(res.data, res.headers, res.config.transformResponse);
   return res;
 };
 
-const getDefaultAdapter = () => {
-  let adapter;
-  if (typeof XMLHttpRequest !== "undefined") {
-    // 浏览器
-    adapter = require("../adapters/xhr");
-  } else if (
-    typeof process !== "undefined" &&
-    Object.prototype.toString.call(process) === "[object process]"
-  ) {
-    // node.js
-    adapter = require("../adapters/http");
-  }
-  return adapter;
-};
-
 const dispatchRequest = (config) => {
-  const adapter = config.adapter || getDefaultAdapter();
-
+  const adapter = config.adapter || defaults.adapter;
   // 处理传入的配置
   processConfig(config);
   // 发送请求
