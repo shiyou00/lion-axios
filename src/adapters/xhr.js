@@ -1,5 +1,7 @@
 import { parseHeaders } from "../helpers/headers";
+import { isURLSameOrigin } from "../helpers/url";
 import { createError } from "../core/error";
+import cookie from "../helpers/cookie";
 
 module.exports = function xhrAdapter(config) {
   return new Promise((resolve, reject) => {
@@ -12,6 +14,8 @@ module.exports = function xhrAdapter(config) {
       timeout,
       cancelToken,
       withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName,
     } = config;
 
     const request = new XMLHttpRequest();
@@ -83,6 +87,14 @@ module.exports = function xhrAdapter(config) {
         )
       );
     };
+
+    if ((withCredentials || isURLSameOrigin(url)) && xsrfCookieName) {
+      // 通过cookie 去读取对应的 token 值
+      const xsrfValue = cookie.read(xsrfCookieName);
+      if (xsrfValue && xsrfHeaderName) {
+        headers[xsrfHeaderName] = xsrfValue;
+      }
+    }
 
     // 遍历所有处理后的 headers
     Object.keys(headers).forEach((name) => {

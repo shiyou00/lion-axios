@@ -21,6 +21,10 @@ const defaults = {
 
   timeout: 0,
 
+  xsrfCookieName: "XSRF-TOKEN",
+
+  xsrfHeaderName: "X-XSRF-TOKEN",
+
   transformRequest: [
     function (data, headers) {
       processHeaders(headers, data);
