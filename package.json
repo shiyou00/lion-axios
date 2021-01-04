@@ -1,18 +1,25 @@
 {
   "name": "lion-axios",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "lion-axios",
   "scripts": {
+    "clean": "rimraf ./dist",
     "dev": "webpack-dev-server --env.development --config webpack.common.js",
-    "build": "webpack --env.production --config webpack.common.js"
+    "build": "npm run clean && webpack --env.production --config webpack.common.js",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shiyou00/lion-axios.git"
   },
-  "keywords": [],
-  "author": "",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/axios.js",
+  "keywords": [
+    "lion-axios"
+  ],
+  "author": "Lion",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/shiyou00/lion-axios/issues"
@@ -36,6 +43,7 @@
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2",
