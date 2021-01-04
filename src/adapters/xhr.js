@@ -10,6 +10,7 @@ module.exports = function xhrAdapter(config) {
       headers = {},
       responseType,
       timeout,
+      cancelToken,
     } = config;
 
     const request = new XMLHttpRequest();
@@ -88,6 +89,16 @@ module.exports = function xhrAdapter(config) {
         request.setRequestHeader(name, headers[name]);
       }
     });
+
+    if (cancelToken) {
+      cancelToken.promise
+        .then((reason) => {
+          request.abort();
+          reject(reason);
+        })
+        .catch(() => {});
+    }
+
     request.send(data);
   });
 };

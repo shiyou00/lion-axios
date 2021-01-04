@@ -20,7 +20,14 @@ const transformResponseData = (res) => {
   return res;
 };
 
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
+  }
+}
+
 const dispatchRequest = (config) => {
+  throwIfCancellationRequested(config);
   const adapter = config.adapter || defaults.adapter;
   // 处理传入的配置
   processConfig(config);
