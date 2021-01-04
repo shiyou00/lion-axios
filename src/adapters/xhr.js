@@ -11,6 +11,7 @@ module.exports = function xhrAdapter(config) {
       responseType,
       timeout,
       cancelToken,
+      withCredentials,
     } = config;
 
     const request = new XMLHttpRequest();
@@ -21,6 +22,10 @@ module.exports = function xhrAdapter(config) {
     // 判断是否有超时的配置，如果有则给request添加超时属性
     if (timeout) {
       request.timeout = timeout;
+    }
+
+    if (withCredentials) {
+      request.withCredentials = withCredentials;
     }
 
     request.open(method.toUpperCase(), url, true);
